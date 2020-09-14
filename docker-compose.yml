@@ -1,0 +1,30 @@
+version: "3"
+services:
+  db:
+    container_name: postgres
+    image:
+      postgres:10
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+    environment:
+      POSTGRES_DB: urls
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pastword
+
+  service:
+    build: .
+    environment:
+      SERVICE_PORT: 9000
+      POSTGRES_USER: postgres
+      POSTGRES_PASS: pastword
+      POSTGRES_DATABASE: urls
+      POSTGRES_PORT: 5432
+      POSTGRES_HOST: postgres
+    ports:
+      - 9000:9000
+    depends_on:
+      - db
+    restart:
+      on-failure
